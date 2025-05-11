@@ -34,7 +34,22 @@ with tabs[1]:
     pop_size = st.slider("Popülasyon Büyüklüğü", 50, 500, 200)
     generations = st.slider("Nesil Sayısı", 100, 2000, 1000)
     max_risk = st.slider("Maksimum Toplam Risk", 0.5, 3.0, 1.5, step=0.1)
-    hesapla = st.button("🚀 Optimizasyonu Başlat")
+    
+with st.form("hesapla_form"):
+    submitted = st.form_submit_button("🚀 Optimizasyonu Başlat")
+    if submitted:
+        with st.spinner("⛽ İkmal aracı yolda, rota optimize ediliyor..."):
+            route, dist, time, risk, log = run_ga(pop_size, generations, max_risk)
+            if route:
+                st.session_state["route"] = route
+                st.session_state["dist"] = dist
+                st.session_state["time"] = time
+                st.session_state["risk"] = risk
+                st.session_state["log"] = log
+                st.success("✅ Rota başarıyla oluşturuldu!")
+            else:
+                st.error("❌ Rota bulunamadı.")
+
 
 if hesapla:
     route, dist, time, risk, log = run_ga(pop_size, generations, max_risk)
