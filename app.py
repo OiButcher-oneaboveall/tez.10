@@ -37,21 +37,22 @@ with tabs[1]:
     
 with st.form("hesapla_form"):
     submitted = st.form_submit_button("🚀 Optimizasyonu Başlat")
-    if submitted:
-        with st.spinner("⛽ İkmal aracı yolda, rota optimize ediliyor..."):
-            route, dist, time, risk, log = run_ga(pop_size, generations, max_risk)
-            if route:
-                st.session_state["route"] = route
-                st.session_state["dist"] = dist
-                st.session_state["time"] = time
-                st.session_state["risk"] = risk
-                st.session_state["log"] = log
-                st.success("✅ Rota başarıyla oluşturuldu!")
-            else:
-                st.error("❌ Rota bulunamadı.")
 
 
-if hesapla:
+
+if submitted:
+    with st.spinner("⛽ İkmal aracı yolda, rota optimize ediliyor..."):
+        route, dist, time, risk, log = run_ga(pop_size, generations, max_risk)
+        if route:
+            st.session_state["route"] = route
+            st.session_state["dist"] = dist
+            st.session_state["time"] = time
+            st.session_state["risk"] = risk
+            st.session_state["log"] = log
+            st.success("✅ Rota başarıyla oluşturuldu!")
+        else:
+            st.error("❌ Rota bulunamadı.")
+
     route, dist, time, risk, log = run_ga(pop_size, generations, max_risk)
     if route:
         st.session_state["route"] = route
