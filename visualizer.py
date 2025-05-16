@@ -3,6 +3,17 @@ import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import folium
 
+city_coords = {
+    "Rafineri": [41.0351, 28.7663],
+    "Gürpınar": [40.9946, 28.5764],
+    "Yenikapı": [41.0030, 28.9497],
+    "Selimiye": [41.0054, 29.0275],
+    "İçerenköy": [40.9845, 29.0936],
+    "Tophane": [41.0273, 28.9768],
+    "Alibeyköy": [41.0662, 28.9314],
+    "İstinye": [41.1099, 29.0570]
+}
+
 def plot_gantt(log):
     tasks = []
     for i, entry in enumerate(log):
@@ -13,11 +24,18 @@ def plot_gantt(log):
     return fig
 
 def plot_folium_route(city_names):
-    m = folium.Map(location=[41.015137, 28.979530], zoom_start=11)
-    folium.Marker(location=[41.015137, 28.979530], tooltip="Rafineri", icon=folium.Icon(color="green")).add_to(m)
-    for i, name in enumerate(city_names):
-        folium.CircleMarker(location=[41 + i*0.01, 28.98 + i*0.01], radius=5, popup=name, color="blue").add_to(m)
-    folium.PolyLine([(41 + i*0.01, 28.98 + i*0.01) for i in range(len(city_names))], color="red").add_to(m)
+    start_coord = city_coords.get("Rafineri", [41.015, 28.979])
+    m = folium.Map(location=start_coord, zoom_start=11)
+
+    for city in city_names:
+        coord = city_coords.get(city)
+        if coord:
+            folium.Marker(location=coord, tooltip=city, icon=folium.Icon(color="blue")).add_to(m)
+
+    # Rota çizgisi
+    path = [city_coords[city] for city in city_names if city in city_coords]
+    folium.PolyLine(path, color="red", weight=5).add_to(m)
+
     return m
 
 def plot_scenario_comparison(data):
